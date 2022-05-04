@@ -24,10 +24,11 @@ jobs:
             path: node_modules
             key: spacedeck-node_modules-${{ hashFiles('**/package-lock.json') }}
 
-        - name: Install Dependencies
-          uses: actions/setup-node@v3
+        - uses: actions/setup-node@v3
           with:
             node-version: 14
+
+        - name: Install Dependencies
           if: steps.npm-cache.outputs.cache-hit != 'true'
           run: |
             npm install
