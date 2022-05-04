@@ -6,7 +6,7 @@ name: Deploy spacedeck dev
 
 jobs:
     build-and-deploy:
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-latest
         steps:
         # checkout the repo
         - name: 'Checkout GitHub Action'
