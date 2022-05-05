@@ -24,6 +24,7 @@ const helmet = require('helmet');
 const express = require('express');
 const app = express();
 const serveStatic = require('serve-static');
+const fs = require('fs')
 
 const isProduction = app.get('env') === 'production';
 
