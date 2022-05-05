@@ -9,7 +9,7 @@ const config = require('config');
 const redis = require('./helpers/redis');
 const websockets = require('./helpers/websockets');
 
-const http = require('http');
+const https = require('https');
 const path = require('path');
 
 const _ = require('underscore');
@@ -119,17 +119,20 @@ db.init();
 const host = config.get('host');
 const port = config.get('port');
 
-const server = http.Server(app).listen(port, host, () => {
-  
+const server = https.createServer({
+      key: fs.readFileSync('cert/server.key'),
+      cert: fs.readFileSync('cert/server.cert')
+    }, app).listen(port, host, () => {
+
   if ("send" in process) {
     process.send('online');
   }
 
 }).on('listening', () => {
-  
+
   const host = server.address().address;
   const port = server.address().port;
-  console.log('Spacedeck Open listening at http://%s:%s', host, port);
+  console.log('Spacedeck Open listening at https://%s:%s', host, port);
 
 }).on('error', (error) => {
 
