@@ -1,4 +1,8 @@
-FROM node:10-alpine3.16
+FROM node:10-alpine3.11
+RUN apk update
+RUN apk add "curl>=7.83.1-r2"
+RUN apk add busybox>=1.35.0-r16 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main
+RUN apk upgrade
 
 WORKDIR /app
 
