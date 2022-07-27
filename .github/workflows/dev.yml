@@ -9,10 +9,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         # checkout the repo
-        - uses: actions/checkout@v2
+        - uses: actions/checkout@v3
 
         - name: Set env
-          run: echo "VERSIONED_IMAGE=${{ github.run_id }}" >> $GITHUB_ENV
+          run: echo "VERSIONED_IMAGE=${{ github.sha }}" >> $GITHUB_ENV
 
         - name: Cache node modules
           uses: actions/cache@v2

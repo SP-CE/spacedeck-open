@@ -1,9 +1,8 @@
 on:
     push:
-        branches:
-        - spce-prod
-        paths:
-        - '.github/workflows/spce-prod.yml'
+        tags:
+        - '*.*.*'
+
 name: Deploy spacedeck SPCE Production
 
 jobs:
@@ -11,8 +10,15 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         # checkout the repo
-        - name: 'Checkout GitHub Action'
-          uses: actions/checkout@master
+        - uses: actions/checkout@v3
+
+        - name: Setup node
+          uses: actions/setup-node@v3
+          with:
+            node-version: 14
+
+        - name: Set Release candidate version
+          run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
         - name: Cache node modules
           uses: actions/cache@v2
@@ -36,8 +42,8 @@ jobs:
             username: ${{ secrets.REGISTRY_USERNAME_PROD }}
             password: ${{ secrets.REGISTRY_PASSWORD_PROD }}
         - run: |
-            docker build . -t spacedeck-open:${{ github.run_id }}
-            docker tag spacedeck-open:${{ github.run_id }} ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:${{ github.run_id }}
-            docker tag spacedeck-open:${{ github.run_id }} ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:latest
+            docker build . -t spacedeck-open:${{ github.sha }}
+            docker tag spacedeck-open:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:${{ github.sha }}
+            docker tag spacedeck-open:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:${{ env.RELEASE_VERSION }}
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:${{ github.run_id }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:latest
+            docker push ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:${{ env.RELEASE_VERSION }}
