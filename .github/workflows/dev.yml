@@ -40,12 +40,11 @@ jobs:
             username: ${{ secrets.REGISTRY_USERNAME }}
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
-                echo "Release version: ${{ env.VERSIONED_IMAGE }}"
-                docker build --rm -t spacedeck-open:${{ env.VERSIONED_IMAGE }} .
-                docker tag spacedeck-open:${{ env.VERSIONED_IMAGE }} nclong87/spacedeck-open:latest
-                docker tag spacedeck-open:${{ env.VERSIONED_IMAGE }} nclong87/spacedeck-open:${{ env.VERSIONED_IMAGE }}
-                docker image push nclong87/spacedeck-open:latest
-                docker image push nclong87/spacedeck-open:${{ env.VERSIONED_IMAGE }}
+                docker build --rm -t spacedeck-open:${{ github.sha }} .
+                docker tag spacedeck-open:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/spacedeck-open:${{ github.sha }}
+                docker tag spacedeck-open:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/spacedeck-open:latest
+                docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/spacedeck-open:${{ github.sha }}
+                docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/spacedeck-open:latest
 
         # - name: 'Deploy to Azure App Service'
         #   uses: 'azure/webapps-deploy@v2'

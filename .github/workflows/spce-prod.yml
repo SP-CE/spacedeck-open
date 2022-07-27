@@ -45,5 +45,5 @@ jobs:
             docker build . -t spacedeck-open:${{ github.sha }}
             docker tag spacedeck-open:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:${{ github.sha }}
             docker tag spacedeck-open:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:${{ env.RELEASE_VERSION }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:${{ github.run_id }}
+            docker push ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:${{ github.sha }}
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER_PROD }}/spacedeck-open:${{ env.RELEASE_VERSION }}
