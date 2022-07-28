@@ -141,7 +141,7 @@ function convertVideo(fileName, filePath, codec, callback, progressCallback) {
 
   ff.on('close', function (code) {
     console.log('[ffmpeg-video] child process exited with code ' + code);
-    if (!code) { 
+    if (!code) {
       console.log("converted", filePath, "to", convertedPath);
       callback(null, convertedPath);
     } else {
@@ -190,7 +190,7 @@ function createThumbnailForVideo(fileName, filePath, callback) {
 function getMime(fileName, filePath, callback) {
   var ext = path.extname(fileName);
   var presetMime = mime.lookup(fileName);
-  
+
   if (presetMime) {
     callback(null, presetMime);
   } else {
@@ -286,7 +286,7 @@ module.exports = {
 
       if (!err) {
         if (convertableImageTypes.indexOf(mimeType) > -1) {
-         
+
           gm(localFilePath).size(function (err, size) {
             console.log("[convert] gm:", err, size);
 
@@ -350,8 +350,8 @@ module.exports = {
                 resizeAndUploadImage(a, mimeType, size, fileName, fileName, localFilePath, localFilePath, payloadCallback);
               }
             } else payloadCallback(err);
-          });            
-      
+          });
+
         } else if (convertableVideoTypes.indexOf(mimeType) > -1) {
           async.parallel({
             thumbnail: function(callback) {
@@ -472,19 +472,19 @@ module.exports = {
                 if(err) callback(err);
                 else {
 
-                  createWaveform(fileName, file, function(err, filePath){
-
-                    var keyName = "s" + a.space_id.toString() + "/a" + a._id.toString() + "/" + fileName + "-" + (new Date().getTime()) + ".png";
-                    uploader.uploadFile(keyName, "image/png", filePath, function(err, pngUrl){
-
-                      var keyName = "s" + a.space_id.toString() + "/a" + a._id.toString() + "/" + fileName + ".mp3" ;
-                      uploader.uploadFile(keyName, "audio/mp3", file, function(err, mp3Url){
-                        if (err) callback(err);
-                        else callback(null, {waveform: pngUrl, mp3: mp3Url});
-                      });
-
-                    });
-                  });
+                  // createWaveform(fileName, file, function(err, filePath){
+                  //
+                  //   var keyName = "s" + a.space_id.toString() + "/a" + a._id.toString() + "/" + fileName + "-" + (new Date().getTime()) + ".png";
+                  //   uploader.uploadFile(keyName, "image/png", filePath, function(err, pngUrl){
+                  //
+                  //     var keyName = "s" + a.space_id.toString() + "/a" + a._id.toString() + "/" + fileName + ".mp3" ;
+                  //     uploader.uploadFile(keyName, "audio/mp3", file, function(err, mp3Url){
+                  //       if (err) callback(err);
+                  //       else callback(null, {waveform: pngUrl, mp3: mp3Url});
+                  //     });
+                  //
+                  //   });
+                  // });
                 }
               });
             },
@@ -517,7 +517,7 @@ module.exports = {
               a.updated_at = new Date();
 
               db.packArtifact(a);
-              
+
               a.save().then(function(){
                 fs.unlink(localFilePath, function (err) {
                   if (err){
@@ -537,13 +537,13 @@ module.exports = {
           console.log("mimeType not matched for conversion, storing file");
           var keyName = "s" + a.space_id.toString() + "/a" + a._id.toString() + "/" + fileName;
           uploader.uploadFile(keyName, mimeType, localFilePath, function(err, url) {
-            
+
             a.state = "idle";
             a.mime = mimeType;
             var stats = fs.statSync(localFilePath);
             a.payload_size = stats["size"];
             a.payload_uri = url;
-            
+
             a.updated_at = new Date();
             a.save().then(function() {
               fs.unlink(localFilePath, function (err) {
@@ -559,5 +559,3 @@ module.exports = {
     });
   }
 };
-
-
