@@ -11,3 +11,4 @@ coverage
 .grunt
 .lock-wscript
 build/Release
+package-lock.json
