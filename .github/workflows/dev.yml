@@ -29,9 +29,11 @@ jobs:
           if: steps.npm-cache.outputs.cache-hit != 'true'
           run: |
             npm install
+
         - name: Build Style
           run: |
             gulp styles
+            rm -rvf node_modules/gulp*
 
         - name: 'Build and push image'
           uses: docker/login-action@v1
