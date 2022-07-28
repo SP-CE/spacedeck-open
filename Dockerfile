@@ -1,6 +1,6 @@
-FROM nclong87/node:10-alpine3.11
+FROM node:14-alpine3.16
 RUN apk update
-RUN apk add busybox>=1.31.1-r11 --repository=http://dl-cdn.alpinelinux.org/alpine/v3.11/main
+RUN apk add busybox>=1.35.0-r16 --repository=http://dl-cdn.alpinelinux.org/alpine/v3.16/main
 RUN apk upgrade
 
 WORKDIR /app
