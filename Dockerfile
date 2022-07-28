@@ -3,8 +3,6 @@ RUN apk update
 RUN apk add busybox>=1.35.0-r16 --repository=http://dl-cdn.alpinelinux.org/alpine/v3.16/main
 RUN apk upgrade
 
-COPY audiowaveform /usr/local/bin/audiowaveform
-
 WORKDIR /app
 
 # install other requirements
