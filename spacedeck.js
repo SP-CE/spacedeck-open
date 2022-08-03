@@ -6,10 +6,12 @@ const db = require('./models/db.js');
 require("log-timestamp");
 
 const config = require('config');
+const fs = require('fs')
 const redis = require('./helpers/redis');
 const websockets = require('./helpers/websockets');
 
 const http = require('http');
+const https = require('https')
 const path = require('path');
 
 const _ = require('underscore');
@@ -118,15 +120,25 @@ db.init();
 // START WEBSERVER
 const host = config.get('host');
 const port = config.get('port');
+const isHttps = config.get('https') === 'yes';
+var server;
+if (isHttps) {
+  server = https.createServer({
+    key: fs.readFileSync('cert/server.key'),
+    cert: fs.readFileSync('cert/server.cert')
+  }, app);
+} else {
+  server = http.createServer(app);
+}
 
-const server = http.Server(app).listen(port, host, () => {
-  
+server.listen(port, host, () => {
+
   if ("send" in process) {
     process.send('online');
   }
 
 }).on('listening', () => {
-  
+
   const host = server.address().address;
   const port = server.address().port;
   console.log('Spacedeck Open listening at http://%s:%s', host, port);
