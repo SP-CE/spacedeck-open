@@ -6,10 +6,12 @@ const db = require('./models/db.js');
 require("log-timestamp");
 
 const config = require('config');
+const fs = require('fs')
 const redis = require('./helpers/redis');
 const websockets = require('./helpers/websockets');
 
 const http = require('http');
+const https = require('https')
 const path = require('path');
 
 const _ = require('underscore');
@@ -35,7 +37,7 @@ console.log("Booting Spacedeck Open… (environment: " + app.get('env') + ")");
 app.use(logger(isProduction ? 'combined' : 'dev'));
 
 i18n.expressBind(app, {
-  locales: ["en", "de", "fr", "oc", "es"],
+  locales: ["de", "en", "es", "fr", "hu", "oc"],
   defaultLocale: "en",
   cookieName: "spacedeck_locale",
   devMode: (app.get('env') == 'development')
@@ -63,7 +65,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(cookieParser());
-//app.use(helmet.frameguard())
+//app.use(helmet.frameguard({ action: 'SAMEORIGIN' }));
 //app.use(helmet.xssFilter())
 /*app.use(helmet.hsts({
   maxAge: 7776000000,
@@ -118,15 +120,25 @@ db.init();
 // START WEBSERVER
 const host = config.get('host');
 const port = config.get('port');
+const isHttps = config.get('https') === 'yes';
+var server;
+if (isHttps) {
+  server = https.createServer({
+    key: fs.readFileSync('cert/server.key'),
+    cert: fs.readFileSync('cert/server.cert')
+  }, app);
+} else {
+  server = http.createServer(app);
+}
 
-const server = http.Server(app).listen(port, host, () => {
-  
+server.listen(port, host, () => {
+
   if ("send" in process) {
     process.send('online');
   }
 
 }).on('listening', () => {
-  
+
   const host = server.address().address;
   const port = server.address().port;
   console.log('Spacedeck Open listening at http://%s:%s', host, port);

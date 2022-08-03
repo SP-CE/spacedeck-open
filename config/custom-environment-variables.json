@@ -1,5 +1,6 @@
 {
     "api_token": "APPSETTING_API_TOKEN",
+    "https": "APPSETTING_HTTPS",
     "mssql_host": "APPSETTING_MSSQL_HOST",
     "mssql_dbname": "APPSETTING_MSSQL_DBNAME",
     "mssql_user": "APPSETTING_MSSQL_USER",

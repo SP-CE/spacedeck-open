@@ -16,14 +16,14 @@ jobs:
 
         - uses: actions/setup-node@v3
           with:
-            node-version: 10
+            node-version: 14
 
         - name: Cache node modules
           uses: actions/cache@v2
           id: npm-cache
           with:
             path: node_modules
-            key: spacedeck-node_modules1-${{ hashFiles('**/package-lock.json') }}
+            key: spacedeck-node_modules3-${{ hashFiles('**/package-lock.json') }}
 
         - name: Install Dependencies
           if: steps.npm-cache.outputs.cache-hit != 'true'
