@@ -55,7 +55,7 @@ var SpacedeckSpaces = {
     // folders
     active_folder: null,
     folder_sorting: "updated_at",
-    
+
     folder_spaces_filter: null,
     active_path_length : 0,
 
@@ -98,7 +98,7 @@ var SpacedeckSpaces = {
         }
       }.bind(this), {value: dft || "Guest "+parseInt(10000*Math.random()), ok: __("ok"), cancel: __("cancel")});
     },
-    
+
     load_space: function(space_id, on_success, on_error) {
       this.folder_spaces_filter="";
       this.folder_spaces_search="";
@@ -108,7 +108,7 @@ var SpacedeckSpaces = {
       } else {
         set_space_auth(get_query_param("spaceAuth"));
       }
-      
+
       this.embedded = !!(get_query_param("embedded"));
 
       var userReady = function() {
@@ -228,7 +228,7 @@ var SpacedeckSpaces = {
               if (!artifacts) {
                 artifacts = [];
               }
-              
+
               // FIXME: remove kludge
               for (var i=0; i<artifacts.length; i++) {
                 this.update_board_artifact_viewmodel(artifacts[i]);
@@ -262,10 +262,10 @@ var SpacedeckSpaces = {
 
               this.active_space_loaded = true;
               this.extract_properties_from_selection(); // populates zones etc
-              
+
               load_comments(space._id, function(messages) {
                 if (!messages) messages = [];
-                
+
                 this.active_space_messages = messages;
                 this.refresh_space_comments();
               }.bind(this), function(xhr) { console.error(xhr); });
@@ -300,27 +300,10 @@ var SpacedeckSpaces = {
         }.bind(this));
 
       }.bind(this);
-      
-      var default_guest = "";
-      if (("localStorage" in window && localStorage) && localStorage['guest_nickname']) {
-        this.guest_nickname = localStorage['guest_nickname'];
-        default_guest = this.guest_nickname;
-        userReady();
-      }
 
-      if (!this.user.nickname && space_auth) {
-        this.guest_nickname = get_query_param("nickname") || this.guest_nickname;
-        if (this.guest_nickname) {
-          userReady();
-        } else {
-          this.ask_guestname(default_guest, function() {
-            userReady();
-          });
-        }
-      } else {
-        this.guest_nickname = "";
-        userReady();
-      }
+      var default_guest = "";
+      this.guest_nickname = "";
+      userReady();
     },
 
     refresh_space_comments: function() {
@@ -436,7 +419,7 @@ var SpacedeckSpaces = {
         } else {
           this.rename_folder(saved_space);
         }
-      }.bind(this), function(xhr) { 
+      }.bind(this), function(xhr) {
         alert("Error: Could not create Space ("+xhr.status+").");
       }.bind(this));
 
@@ -630,8 +613,8 @@ var SpacedeckSpaces = {
       this.global_spinner = true;
 
       get_resource("/spaces/" + space._id + "/zip", function(o) {
-       
-        this.global_spinner = false; 
+
+        this.global_spinner = false;
         location.href = o.url;
 
       }.bind(this), function(xhr) {
@@ -639,17 +622,17 @@ var SpacedeckSpaces = {
         alert("ZIP export problem (" + xhr.status + ").");
       }.bind(this));
     },
-    
+
     download_space_as_list: function(space) {
       this.global_spinner = true;
       location.href = "/api/spaces/" + space._id + "/list";
     },
-    
+
     toggle_follow_mode: function() {
       this.deselect();
       this.follow_mode = !this.follow_mode;
     },
-    
+
     toggle_present_mode: function() {
       this.deselect();
       this.present_mode = !this.present_mode;
@@ -749,7 +732,7 @@ var SpacedeckSpaces = {
           this.access_settings_memberships.push(m);
           console.log("membership created:", m);
           this.editors_section="list";
-          
+
           if (!displayed_success) {
             displayed_success = true;
             smoke.alert("Invitation(s) sent.");
@@ -825,13 +808,13 @@ var SpacedeckSpaces = {
         console.error(xhr);
       }.bind(this));
     },
-    
+
     set_folder_sorting: function(key,reverse) {
       this.folder_sorting = key;
       this.folder_reverse = reverse?-1:1;
 
       console.log(key, reverse);
-      
+
       if ("localStorage" in window) {
         localStorage["folder_sorting_"+this.active_folder._id] = this.folder_sorting;
         localStorage["folder_reverse_"+this.active_folder._id] = this.folder_reverse;
@@ -889,7 +872,7 @@ var SpacedeckSpaces = {
       } else {
         return;
       }
-      
+
       this.access_settings_memberships = this.active_space_memberships;
     },
     close_access: function() {
