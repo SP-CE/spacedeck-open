@@ -23,7 +23,7 @@ jobs:
           id: npm-cache
           with:
             path: node_modules
-            key: spacedeck-node_modules2-${{ hashFiles('**/package-lock.json') }}
+            key: spacedeck-node_modules3-${{ hashFiles('**/package-lock.json') }}
 
         - name: Install Dependencies
           if: steps.npm-cache.outputs.cache-hit != 'true'
