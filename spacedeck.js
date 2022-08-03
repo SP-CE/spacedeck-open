@@ -35,7 +35,7 @@ console.log("Booting Spacedeck Open… (environment: " + app.get('env') + ")");
 app.use(logger(isProduction ? 'combined' : 'dev'));
 
 i18n.expressBind(app, {
-  locales: ["en", "de", "fr", "oc", "es"],
+  locales: ["de", "en", "es", "fr", "hu", "oc"],
   defaultLocale: "en",
   cookieName: "spacedeck_locale",
   devMode: (app.get('env') == 'development')
@@ -63,7 +63,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(cookieParser());
-//app.use(helmet.frameguard())
+//app.use(helmet.frameguard({ action: 'SAMEORIGIN' }));
 //app.use(helmet.xssFilter())
 /*app.use(helmet.hsts({
   maxAge: 7776000000,

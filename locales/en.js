@@ -19,6 +19,7 @@
 	"logout": "Log out",
 	"email": "Email Address",
 	"password": "Password",
+	"forgot_password": "Forgot Password",
 	"width": "Width",
 	"height": "Height",
 	"nick": "Name",
@@ -172,6 +173,7 @@
 	"tool_styles": "Styles",
 	"tool_bullets": "Bullets",
 	"tool_numbers": "Numbers",
+	"tool_font": "Font",
 	"color_fill": "Fill",
 	"color_stroke": "Stroke",
 	"color_text": "Text",
@@ -308,6 +310,7 @@
 	"list": "Export List",
 	"link": "Link",
 	"download_space": "Download Space",
+	"download_as_pdf": "Download Space as PDF",
 	"type": "Type",
 	"download": "Download",
 	"Previous Zone": "Previous Zone",
@@ -320,5 +323,10 @@
 	"follow_present": "Follow",
 	"mute_present": "Unfollow",
 	"follow_present_help": "If someone else is presenting this Space, the other members automatically follow the presentation. Switch following on or off with this button.",
-	"export": "export"
+	"export": "Export",
+	"media": "Media",
+	"tool_edit_text": "Edit Text",
+	"tool_space_help_part_one": "Use the toolbar to add content.",
+	"tool_space_help_part_two": "You can also drop images or sound and video files.",
+	"tool_delete_space": "Really delete \"%s\"?"
 }

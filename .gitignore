@@ -7,3 +7,4 @@ database.sqlite
 *~
 *.DS_Store
 .vscode
+storage/

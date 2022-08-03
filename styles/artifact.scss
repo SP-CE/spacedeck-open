@@ -3,6 +3,7 @@
 
 .artifact {
   position: relative;
+  line-height: normal;
   //-webkit-transform: translate3d(0,0,0); // hw accel
 
   iframe {
@@ -11,10 +12,12 @@
     max-height: 100%;
   }
 
-  &.hide-text .text { opacity: 0 }
+  &.hide-text .text {
+    opacity: 0;
+  }
 
   &.locked.selected {
-    box-shadow: 0px 0px 0px 3px rgba(0,0,0,0.5) !important;
+    box-shadow: 0px 0px 0px 3px rgba(0, 0, 0, 0.5) !important;
   }
 
   .placeholder {
@@ -26,7 +29,9 @@
     }
   }
 
-  &.artifact-text.text-blank [contentEditable=true]:not(.text-editing) p:first-child::after {
+  &.artifact-text.text-blank
+    [contentEditable="true"]:not(.text-editing)
+    p:first-child::after {
     content: "Double click to edit";
     opacity: 0.25;
   }
@@ -49,6 +54,7 @@
     max-width: 100%;
     overflow-x: hidden;
     margin-top: -3em;
+    z-index: 100;
   }
 
   .edit {
@@ -78,7 +84,6 @@
     // padding-right: 20px; margin-right: -20px;
 
     //> * {pointer-events: auto; }
-
   }
 
   &:not(.artifact-text) {
@@ -141,7 +146,9 @@
         li {
           margin-top: 0;
           margin-bottom: 0.5em;
-          &:last-child {margin-bottom: 0em !important; }
+          &:last-child {
+            margin-bottom: 0em !important;
+          }
         }
 
         h1 {
@@ -178,10 +185,14 @@
         p {
           margin-top: 0;
           margin-bottom: 0.5em; // compatibility to old system
-          &:last-child {margin-bottom: 0em !important; }
+          &:last-child {
+            margin-bottom: 0em !important;
+          }
         }
 
-        a {pointer-events: none; }
+        a {
+          pointer-events: none;
+        }
 
         ol {
           padding: 0;
@@ -246,7 +257,7 @@
   }
 
   .oembed,
-  div[class*='oembed-'] {
+  div[class*="oembed-"] {
     height: 100%;
     .play {
       position: absolute;
@@ -288,8 +299,10 @@
         pointer-events: none;
       }
     }
-    
-    .title {font-size: 20px; }
+
+    .title {
+      font-size: 20px;
+    }
     .image {
       height: auto;
       top: 0;
@@ -318,10 +331,17 @@
     }
   }
 
-  .video   {
+  .video {
     width: 100%;
     height: 100%;
     background-size: cover;
+    background-color: black;
+
+    &.playing {
+      video {
+        z-index: 1;
+      }
+    }
 
     .title {
       position: absolute;
@@ -335,25 +355,26 @@
       padding: 10px 15px;
       font-size: 10px;
     }
-    
+
     video {
       width: 100%;
       height: 100%;
+      position: absolute;
+      left: 0;
     }
 
     .tl-controls {
       position: absolute;
-      bottom: 10px;
+      top: 10px;
       left: 10px;
       right: 10px;
       text-align: center;
+      z-index: 2;
 
       .btn {
         margin-top: 20px;
-
       }
     }
-
   }
 
   // FIXME: fix later
@@ -372,8 +393,8 @@
     height: 100%;
     .timeline {
       position: absolute;
-      left:0;
-      top:0;
+      left: 0;
+      top: 0;
       width: 100%;
       bottom: 54px;
       background-size: 100% 100%;
@@ -382,7 +403,7 @@
       overflow: hidden;
 
       .tl-current-time {
-        height:100%;
+        height: 100%;
         background: white;
         opacity: 0.5;
         border-right: 1px solid #888;
@@ -418,12 +439,11 @@
 
       .btn {
         margin-top: 20px;
-
       }
     }
 
     .tl-title {
-      margin-left:10px;
+      margin-left: 10px;
       max-width: 55%;
       overflow: hidden;
       display: inline-block;
@@ -445,19 +465,41 @@
     height: 100%;
   }
 
-  &.bold          { font-weight: bold;}
-  &.italic        { font-style: italic;}
-  &.underline     { text-decoration: underline;}
-  &.strike        { text-decoration: line-through;}
+  &.bold {
+    font-weight: bold;
+  }
+  &.italic {
+    font-style: italic;
+  }
+  &.underline {
+    text-decoration: underline;
+  }
+  &.strike {
+    text-decoration: line-through;
+  }
 
-  &.align-top     .text-cell {vertical-align: top;}
-  &.align-middle  .text-cell {vertical-align: middle;}
-  &.align-bottom  .text-cell {vertical-align: bottom;}
+  &.align-top .text-cell {
+    vertical-align: top;
+  }
+  &.align-middle .text-cell {
+    vertical-align: middle;
+  }
+  &.align-bottom .text-cell {
+    vertical-align: bottom;
+  }
 
-  &.align-left    { text-align: left; }
-  &.align-center  { text-align: center; }
-  &.align-right   { text-align: right; }
-  &.align-justify { text-align: justify; }
+  &.align-left {
+    text-align: left;
+  }
+  &.align-center {
+    text-align: center;
+  }
+  &.align-right {
+    text-align: right;
+  }
+  &.align-justify {
+    text-align: justify;
+  }
 
   audio {
     width: 100%;
@@ -472,10 +514,14 @@
   font-size: 36px;
 
   &.artifact-zone {
-    background-color: rgba(0,0,0,0.05);
+    background-color: rgba(0, 0, 0, 0.05);
     border-radius: 10px;
-    &:after {display: none; }
-    .shape {display: none; }
+    &:after {
+      display: none;
+    }
+    .shape {
+      display: none;
+    }
     .zone {
       height: 100%;
     }
@@ -487,32 +533,31 @@ body.present-mode {
     .artifact-zone {
       display: none;
     }
-    .artifact  {
+    .artifact {
       cursor: default !important;
-      .text a { pointer-events: auto !important; }
+      .text a {
+        pointer-events: auto !important;
+      }
     }
   }
 }
 
 body:not(.present-mode) {
-
   #space {
-
     .Medium {
       cursor: text;
     }
-    
-    .artifact {
 
+    .artifact {
       &.selected.text-editing,
       &.text-editing {
         cursor: text;
 
         &:before {
-          border: 1px solid rgba(255,255,255,0.25);
+          border: 1px solid rgba(255, 255, 255, 0.25);
         }
         &:after {
-          border: 1px dotted rgba(40,140,215,0.5);
+          border: 1px dotted rgba(40, 140, 215, 0.5);
           background-color: transparent !important;
         }
       }
@@ -526,24 +571,27 @@ body:not(.present-mode) {
         }
 
         &:not(.artifact-vector):after {
-          border: 1px solid rgba(40,140,215,1);
+          border: 1px solid rgba(40, 140, 215, 1);
           // overlay color removed for now (messes with colors)
           //background-color: rgba(40,140,215,0.35);
         }
       }
-
     }
   }
 }
 
-.mouse-scribble, .tool-scribble, .tool-line, .tool-arrow {
+.mouse-scribble,
+.tool-scribble,
+.tool-line,
+.tool-arrow {
   cursor: crosshair !important;
 
   .artifact {
     pointer-events: none !important;
   }
 
-  .artifact:after, .artifact:before {
+  .artifact:after,
+  .artifact:before {
     display: none !important;
   }
 }
@@ -557,25 +605,32 @@ body:not(.present-mode) {
 }
 
 .artifact.state-idle {
-  .progress, .progress-text {
+  .progress,
+  .progress-text {
     display: none;
   }
 }
 
-.artifact.state-processing, .artifact.state-uploading {
+.artifact.state-processing,
+.artifact.state-uploading {
   .progress {
     height: 100%;
-    padding: 10px;
-    
-    background-color: $blue;
+    padding: 4px;
     opacity: 0.9;
-    text-align: center;
+    font-size: 14px;
+  }
+  .progress-container {
+    background: $white;
+    width: 100%;
+    height: 100%;
+    padding-left: 10px;
+    padding-top: 10px;
   }
   .progress-text {
     text-align: center;
     padding: 8px;
     width: 100%;
-    
+
     position: absolute;
     left: 0px;
     top: 0px;
@@ -583,43 +638,48 @@ body:not(.present-mode) {
     color: #888;
     font-size: 10px;
   }
-  video, audio, .tl-controls, .timeline {
+  video,
+  audio,
+  .tl-controls,
+  .timeline {
     display: none;
   }
-  
-  
+
   background-color: white;
 }
 
 .state-processing .spinner {
   opacity: 1;
-  background-image: url('/images/hourglass.gif');
+  background-image: url("/images/hourglass.gif");
 }
 
 .state-uploading .spinner {
   opacity: 0.8;
-  background-image: url('/images/hourglass.gif');
+  background-image: url("/images/hourglass.gif");
 }
 
 .state-idle .spinner {
   display: none;
 }
 
-
 .artifact.image {
   background-color: transparent;
-  &.state-loading { background-color: rgba(40,140,215,0.05);}
-  &.state-processing { background-color: rgba(107,195,111,0.05);}
+  &.state-loading {
+    background-color: rgba(40, 140, 215, 0.05);
+  }
+  &.state-processing {
+    background-color: rgba(107, 195, 111, 0.05);
+  }
 }
 
 .spinner {
-  height:44px;
-  width:44px;
-  position:absolute;
+  height: 44px;
+  width: 44px;
+  position: absolute;
   top: 50%;
   left: 50%;
   margin: -22px;
-  border-radius:100%;
+  border-radius: 100%;
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -628,7 +688,7 @@ body:not(.present-mode) {
   img {
     width: 200px;
   }
-  
+
   .artifact {
     display: block;
     width: 200px;

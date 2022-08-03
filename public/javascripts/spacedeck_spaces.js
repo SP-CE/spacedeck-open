@@ -99,7 +99,7 @@ var SpacedeckSpaces = {
       }.bind(this), {value: dft || "Guest "+parseInt(10000*Math.random()), ok: __("ok"), cancel: __("cancel")});
     },
     
-    load_space: function(space_id, on_success, on_error, space_auth) {
+    load_space: function(space_id, on_success, on_error) {
       this.folder_spaces_filter="";
       this.folder_spaces_search="";
 
@@ -308,7 +308,8 @@ var SpacedeckSpaces = {
         userReady();
       }
 
-      if (!this.user && space_auth) {
+      if (!this.user.nickname && space_auth) {
+        this.guest_nickname = get_query_param("nickname") || this.guest_nickname;
         if (this.guest_nickname) {
           userReady();
         } else {
@@ -417,7 +418,7 @@ var SpacedeckSpaces = {
       if (!space_type) space_type = "space";
 
       var s = {
-        name: space_type == "space" ? __("untitled_space") : __("untitled_folder") ,
+        name: space_type == "space" ? __("untitled_space") : __("untitled_folder"),
         artifacts: [],
         space_type: space_type,
         parent_space_id: this.active_folder._id
@@ -486,7 +487,7 @@ var SpacedeckSpaces = {
     },
 
     delete_space: function(space) {
-      smoke.confirm("Really delete "+space.name+"?", function(confirmed) {
+      smoke.confirm(__("tool_delete_space", space.name), function(confirmed) {
         if (!confirmed) return;
         var idx = this.active_folder.children.indexOf(space);
 
@@ -501,7 +502,7 @@ var SpacedeckSpaces = {
 
           this.active_folder.children.splice(idx,1);
         }.bind(this));
-      }.bind(this));
+      }.bind(this), {ok: __("ok"), cancel: __("cancel")});
     },
 
     duplicate_space: function(space) {
@@ -527,7 +528,7 @@ var SpacedeckSpaces = {
           space.name = title;
           save_space(space);
         }
-      }.bind(this), {value: space.name});
+      }.bind(this), {value: space.name, ok: __("ok"), cancel: __("cancel")});
     },
 
     rename_folder: function(folder) {
@@ -538,7 +539,7 @@ var SpacedeckSpaces = {
           folder.name = title;
           save_space(folder);
         }
-      }.bind(this), {value: folder.name});
+      }.bind(this), {value: folder.name, ok: __("ok"), cancel: __("cancel")});
     },
 
     edit_space_title: function() {
@@ -614,10 +615,11 @@ var SpacedeckSpaces = {
     },
 
     download_space_as_pdf: function(space) {
+      this.close_dropdown();
       this.global_spinner = true;
       get_resource("/spaces/" + space._id + "/pdf", function(o) {
         this.global_spinner = false;
-        location.href = o.url;
+        window.open(o.url, "_blank");
       }.bind(this), function(xhr) {
         this.global_spinner = false;
         alert("PDF export problem (" + xhr.status + ").");
