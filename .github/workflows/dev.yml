@@ -39,7 +39,6 @@ jobs:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_PASSWORD }}
         - run: |
-            echo "Release version: ${{ env.RELEASE_VERSION }}"
             docker build -t spacedeck-open:${{ github.sha }} .
             docker tag spacedeck-open:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/spacedeck-open-dev:${{ github.sha }}
             docker tag spacedeck-open:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/spacedeck-open-dev:latest
