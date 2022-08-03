@@ -12,7 +12,7 @@ jobs:
         - name: 'Checkout GitHub Action'
           uses: actions/checkout@v3
           with:
-            ref: spce-prod
+            ref: spce-dev
 
         - uses: actions/setup-node@v3
           with:
