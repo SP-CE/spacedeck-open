@@ -8,8 +8,15 @@
   "api_token": "123456",
   "invite_code": "123456",
 
+  "storage_dialect": "sqlite",
+
+  "storage_host": "localhost",
+  "storage_database": "spacedeck",
+  "storage_username": "username",
+  "storage_password": "password",
+
   "storage_local_path": "./storage",
-  "storage_local_db": "./database.sqlite",
+  "storage_local_db": "./database/database.sqlite",
   "storage_region": "eu-central-1",
   "storage_endpoint": "http://localhost:4572",
   "storage_bucket": "my_spacedeck_bucket",
@@ -24,7 +31,7 @@
   "redis_mock": true,
   "redis_host": "localhost",
 
-  "phantom_api_secret": "very_secret_phantom_password",
+  "export_api_secret": "very_secret_export_password",
 
   "mail_provider": "smtp",
   "mail_smtp_host": "your.smtp.host",
@@ -32,5 +39,6 @@
   "mail_smtp_secure": true,
   "mail_smtp_require_tls": true,
   "mail_smtp_user": "your.smtp.user",
-  "mail_smtp_pass": "your.secret.smtp.password"
+  "mail_smtp_pass": "your.secret.smtp.password",
+  "spacedeck": {}
 }
