@@ -34,16 +34,16 @@ hpa:
   memoryAverageUtilization: 80
 
 livenessProbe:
-  path: /
-  port: 80
+  path: /ping
+  port: 9666
   initialDelaySeconds: 30
   periodSeconds: 30
   failureThreshold: 5
   timeoutSeconds: 10
 
 readinessProbe:
-  path: /
-  port: 80
+  path: /ping
+  port: 9666
   initialDelaySeconds: 30
   periodSeconds: 30
   failureThreshold: 5
