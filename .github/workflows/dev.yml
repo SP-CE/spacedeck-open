@@ -1,47 +1,74 @@
 on:
-    push:
-        branches:
-        - spce-dev
+  push:
+    branches:
+    - feature/migrate-to-aks
 name: Deploy spacedeck dev
 
 jobs:
-    build-and-deploy:
-        runs-on: ubuntu-latest
-        steps:
-        # checkout the repo
-        - name: 'Checkout GitHub Action'
-          uses: actions/checkout@v3
-          with:
-            ref: spce-dev
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@master
+      
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 14
 
-        - uses: actions/setup-node@v3
-          with:
-            node-version: 14
+    - name: Cache node modules
+      uses: actions/cache@v2
+      id: npm-cache
+      with:
+        path: node_modules
+        key: spacedeck-node_modules3-${{ hashFiles('**/package-lock.json') }}
 
-        - name: Cache node modules
-          uses: actions/cache@v2
-          id: npm-cache
-          with:
-            path: node_modules
-            key: spacedeck-node_modules3-${{ hashFiles('**/package-lock.json') }}
+    - name: Install Dependencies
+      if: steps.npm-cache.outputs.cache-hit != 'true'
+      run: |
+        npm install
 
-        - name: Install Dependencies
-          if: steps.npm-cache.outputs.cache-hit != 'true'
-          run: |
-            npm install
-
-        - name: Build Style
-          run: |
-            gulp styles
+    - name: Build Style
+      run: |
+        gulp styles
 
         - name: 'Build and push image'
-          uses: docker/login-action@v2
-          with:
-            username: ${{ secrets.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        - run: |
-            docker build -t spacedeck-open:${{ github.sha }} .
-            docker tag spacedeck-open:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/spacedeck-open-dev:${{ github.sha }}
-            docker tag spacedeck-open:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/spacedeck-open-dev:latest
-            docker push ${{ secrets.DOCKERHUB_USERNAME }}/spacedeck-open-dev:${{ github.sha }}
-            docker push ${{ secrets.DOCKERHUB_USERNAME }}/spacedeck-open-dev:latest
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER_DEV }}
+          username: ${{ secrets.ACR_USERNAME_DEV }}
+          password: ${{ secrets.ACR_PASSWORD_DEV }}
+
+    - name: Build the image and push it to ACR
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: ${{ secrets.ACR_LOGIN_SERVER_DEV }}/spce-dev-spacedeck:${{ github.sha }}
+        file: Dockerfile
+        context: .
+
+    - name: Azure login
+      id: login
+      uses: azure/login@v1.4.3
+      with:
+        creds: ${{ secrets.AKS_CREDENTIALS_DEV }}
+
+    - name: Set AKS context
+      id: set-context
+      uses: azure/aks-set-context@v3
+      with:
+        resource-group: '${{ secrets.AKS_RG_DEV }}' 
+        cluster-name: '${{ secrets.AKS_CLUSTER_DEV }}'
+    - run: |
+        cd helm && helm upgrade --install --atomic --cleanup-on-fail spce-spacedeck . --create-namespace --set image.tag=${{ github.sha }} -f values-dev.yaml
+
+    # - name: 'Build and push image'
+    #   uses: docker/login-action@v2
+    #   with:
+    #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+    #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    # - run: |
+    #     docker build -t spacedeck-open:${{ github.sha }} .
+    #     docker tag spacedeck-open:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/spacedeck-open-dev:${{ github.sha }}
+    #     docker tag spacedeck-open:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/spacedeck-open-dev:latest
+    #     docker push ${{ secrets.DOCKERHUB_USERNAME }}/spacedeck-open-dev:${{ github.sha }}
+    #     docker push ${{ secrets.DOCKERHUB_USERNAME }}/spacedeck-open-dev:latest

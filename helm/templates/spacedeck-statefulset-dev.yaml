@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  serviceName: {{ .Chart.Name }}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Chart.Name }}-selector"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Chart.Name }}-selector"
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{ .Values.service.ClusterIP.port }}
+          name: server
+        resources:
+          limits:
+            cpu: "500m"
+            memory: 1Gi
+          requests:
+            cpu: "50m"
+            memory: 50Mi
+        env:
+          - name: APPSETTING_API_TOKEN
+            value: "Grym123!"
+          - name: APPSETTING_MSSQL_HOST
+            value: "meeting-maker-sql-stateful-deploy.database.svc.cluster.local"
+          - name: APPSETTING_MSSQL_DBNAME
+            value: "spce_dev_spacedeck"
+          - name: APPSETTING_MSSQL_USER
+            value: "SA"
+          - name: APPSETTING_MSSQL_PASSWORD
+            value: "MyC0m9l&xP@ssw0rd"
+          - name: APPSETTING_HTTPS
+            value: "no"
+        volumeMounts:
+        - name: {{ .Chart.Name }}
+          mountPath: /usr/spacedeck_data
+        # - name: cert-configmap
+        #   mountPath: /app/cert/server.cert
+        #   subPath: server.cert
+        # - name: cert-configmap
+        #   mountPath: /app/cert/server.key
+        #   subPath: server.key
+      volumes:
+      - name: {{ .Chart.Name }}
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}
+      # - name: cert-configmap
+      #   configMap:
+      #     name: cert-configmap
+      #     items:
+      #       - key: server.cert
+      #         path: server.cert
+      #       - key: server.key
+      #         path: server.key
