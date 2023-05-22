@@ -2,7 +2,7 @@ replicaCount: 1
 revisionHistoryLimit: 0
 host: 
   url: appdev.spce.com
-  path: /api/spacedeck
+  path: /api/spacedeck/
 image:
   repository: spcedevacr.azurecr.io/spce-dev-spacedeck
   pullPolicy: Always
