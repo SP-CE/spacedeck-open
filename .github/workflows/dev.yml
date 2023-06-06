@@ -1,8 +1,8 @@
+name: SPCE-SPACEDECK-PIPELINE-DEV
 on:
   push:
     branches:
     - feature/migrate-to-aks
-name: Deploy spacedeck dev
 
 jobs:
   build-and-deploy:
@@ -10,7 +10,16 @@ jobs:
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@master
-      
+
+    - name: Microsoft Teams Start Notification
+      uses: skitionek/notify-microsoft-teams@master
+      if: always()
+      with:
+        webhook_url: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK_URI}}
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        steps: ${{ toJson(steps) }}      
+       
     - uses: actions/setup-node@v3
       with:
         node-version: 14
@@ -23,11 +32,13 @@ jobs:
         key: spacedeck-node_modules3-${{ hashFiles('**/package-lock.json') }}
 
     - name: Install Dependencies
+      id: Install
       if: steps.npm-cache.outputs.cache-hit != 'true'
       run: |
         npm install
 
     - name: Build Style
+      id: Build
       run: |
         gulp styles
 
@@ -39,6 +50,7 @@ jobs:
         password: ${{ secrets.ACR_PASSWORD_DEV }}
 
     - name: Build the image and push it to ACR
+      id: docker-build-push
       uses: docker/build-push-action@v2
       with:
         push: true
@@ -58,5 +70,16 @@ jobs:
       with:
         resource-group: '${{ secrets.AKS_RG_DEV }}' 
         cluster-name: '${{ secrets.AKS_CLUSTER_DEV }}'
-    - run: |
+    - id: deploy
+      run: |
         cd helm && helm upgrade --install --atomic --cleanup-on-fail spce-spacedeck . --create-namespace --set image.tag=${{ github.sha }} -f values-dev.yaml
+
+    - name: Microsoft Teams Notification Finish
+      uses: skitionek/notify-microsoft-teams@master
+      if: always()
+      with:
+        webhook_url: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK_URI }}
+        overwrite: "{title: `Deploy success in ${workflow_link}`}"
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        steps: ${{ toJson(steps) }}
