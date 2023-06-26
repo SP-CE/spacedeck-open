@@ -42,7 +42,7 @@ spec:
   - host: spacedeckdev.spce.com
     http: 
       paths:
-      - path: {{ .Values.host.path }}
+      - path: /
         pathType: Prefix
         backend:
           service:
