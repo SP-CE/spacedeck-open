@@ -2,7 +2,7 @@ name: SPCE-SPACEDECK-PIPELINE-DEV
 on:
   push:
     branches:
-    - feature/migrate-to-aks
+    - dev
 
 jobs:
   build-and-deploy:
