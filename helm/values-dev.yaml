@@ -1,0 +1,55 @@
+replicaCount: 1
+revisionHistoryLimit: 0
+host: 
+  url: appdev.spce.com
+  path: /api/spaces/
+image:
+  repository: spcedevacr.azurecr.io/spce-dev-spacedeck
+  pullPolicy: Always
+  tag: "latest"
+
+resources:
+  cpu:
+    limit: "100m"
+    requests: "50m" 
+  memory:
+    limit: "128Mi"
+    requests: "64Mi"
+
+service:
+  ClusterIP:
+    type: ClusterIP
+    port: 80
+    targetPort: 9666
+    protocol: TCP
+
+rollingUpdate:
+  maxUnavailable: 0
+  maxSurge: 1
+
+hpa:
+  minReplicas: 1
+  maxReplicas: 2
+  cpuAverageUtilization: 80
+  memoryAverageUtilization: 80
+
+livenessProbe:
+  path: /ping
+  port: 9666
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  failureThreshold: 5
+  timeoutSeconds: 10
+
+readinessProbe:
+  path: /ping
+  port: 9666
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  failureThreshold: 5
+  timeoutSeconds: 10
+  successThreshold: 1
+
+# helm upgrade --install --atomic --cleanup-on-fail $SERVICE_NAME . --create-namespace --set image.tag=$SERVICE_NAME-${IMAGE_TAG} --timeout 10m
+
+# helm upgrade --install --atomic --cleanup-on-fail spce-web . --create-namespace --set image.tag=41396a23bf88876bfa1d3157494e0cea666c83bf --timeout 10m
