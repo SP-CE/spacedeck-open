@@ -6,7 +6,12 @@ metadata:
     app: {{ .Chart.Name }}
 spec:
   serviceName: {{ .Chart.Name }}
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ .Values.rollingUpdate.maxUnavailable }}
   selector:
     matchLabels:
       app: "{{ .Chart.Name }}-selector"
@@ -42,24 +47,14 @@ spec:
           name: server
         resources:
           limits:
-            cpu: "500m"
-            memory: 1Gi
+            cpu: {{ .Values.resources.cpu.limit }}
+            memory: {{ .Values.resources.memory.limit }}
           requests:
-            cpu: "50m"
-            memory: 50Mi
-        env:
-          - name: APPSETTING_API_TOKEN
-            value: "Grym123!"
-          - name: APPSETTING_MSSQL_HOST
-            value: "meeting-maker-sql-stateful-deploy.database.svc.cluster.local"
-          - name: APPSETTING_MSSQL_DBNAME
-            value: "spce_dev_spacedeck"
-          - name: APPSETTING_MSSQL_USER
-            value: "SA"
-          - name: APPSETTING_MSSQL_PASSWORD
-            value: "MyC0m9l&xP@ssw0rd"
-          - name: APPSETTING_HTTPS
-            value: "no"
+            cpu: {{ .Values.resources.cpu.requests }}
+            memory: {{ .Values.resources.memory.requests }}
+        envFrom:
+        - secretRef:
+            name: {{ .Chart.Name }}
         volumeMounts:
         - name: {{ .Chart.Name }}
           mountPath: /usr/spacedeck_data
